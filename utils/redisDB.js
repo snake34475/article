@@ -55,12 +55,12 @@ text = async (key) => {
         })
     })
 
-    getTempValue = JSON.parse(getTempValue)
-    return getTempValue
+    getTempValue = JSON.parse(getTempValue) //是async会因事返回promise，所以此处还是原类型
+    return getTempValue 
 }
 
 redis.get = async (key) => {
-    return await text(key)
+    return await text(key)//因为async会隐式返回一个promise，因此需要使用asyncs
 }
 
 //设置key过期时间
@@ -122,10 +122,14 @@ tempData = async (key, min, max) => {
   10) "50"
 
      */
-    for (let i = 0; i < tData.length; i + 2) {
-        //返回的对象是member就是key值，score就是他的value
+    console.log('执循环钱行',tData.length)
+    for (let i = 0; i < tData.length; i += 2) {
+        //返回的对象是member就是key值，score就是他的value\
+        // console.log("tData",tData[i])
         oData.push({member: JSON.parse(tData[i]), score: tData[i + 1]})
+        // console.log("tData")
     }
+    console.log("goodss")
     return oData
 }
 
@@ -135,11 +139,17 @@ redis.zrevrange = async (key, min = 0, max = -1) => {
 
 //有序集合的自增操作
 
-redis.zincrby = (key, member, NUM = 1) => {
+redis.zincrby = async (key, member, NUM = 1) => {
     member = JSON.stringify(member)
-    redis_client.zincrby(key, NUM, member, (err) => {
-        if (err) console.log(err)
+    return await new Promise(resolve=>{
+        redis_client.zincrby(key, NUM, member, (err) => {
+            if (err) console.log(err)
+            resolve()
+        })
     })
+    
+    
+   
 }
 
 //有序集合通过member获取score值
