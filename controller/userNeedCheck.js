@@ -36,6 +36,7 @@ exports.getUserInfo = (req, res, next) => {
           delete data.password;
           delete data.phone;
         }
+        data.role = []
         res.json(util.getReturnData(0, "", data));
       } else {
         res.json(util.getReturnData(1, "用户不存在"));

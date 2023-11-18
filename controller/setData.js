@@ -133,7 +133,7 @@ exports.setArticleType = (req, res) => {
 
 //封停用户
 exports.stopLogin=(req, res) => {
-    let key = req.headers.fapp+':user:info'+req.params.id
+    let key = req.headers.fapp+':user:info:'+req.params.id
     redis.get(key).then(user=>{
         if(!user) return  res.json(util.getReturnData(1,'该用户不存在'))
         if(user.login==0){
