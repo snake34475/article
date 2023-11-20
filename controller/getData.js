@@ -18,6 +18,14 @@ exports.getFooter = (req, res, next) => {
 exports.getLinks = (req, res, next) => {
   let key = req.headers.fapp + ":links";
   redis.get(key).then((data) => {
+    const name = req.query.name;
+    const src = req.query.src;
+    if (name) {
+      data = data.filter((item) => item.name.includes(name));
+    }
+    if (src) {
+      data = data.filter((item) => item.src.includes(src));
+    }
     res.json(util.getReturnData(0, "", data));
   });
 };
@@ -75,11 +83,9 @@ exports.getNewArticle = (req, res, next) => {
                 id: data1.a_id,
               };
             });
-          
-
           });
-          let t_data = await Promise.all(result)
-         return res.json(util.getReturnData(0,"",t_data))
+          let t_data = await Promise.all(result);
+          return res.json(util.getReturnData(0, "", t_data));
         });
       }
     });
